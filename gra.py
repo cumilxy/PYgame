@@ -38,18 +38,30 @@ class Object(sprite.Sprite):
         keys = key.get_pressed()
         if keys[K_LEFT] and self.rect.x > 0: #vlivo2
             self.rect.x -= self.speed
+            for w in walls:
+                if sprite.collide_rect(chuvak2,w):
+                    self.rect.x += self.speed
         if keys[K_UP] and self.rect.y >0:  #vgoru2
             self.rect.y -= self.speed
+            for w in walls:
+                if sprite.collide_rect(chuvak2,w):
+                    self.rect.y += self.speed
         if keys[K_RIGHT] and self.rect.x < 650: #vpravo2
             self.rect.x += self.speed
+            for w in walls:
+                if sprite.collide_rect(chuvak2,w):
+                    self.rect.x -= self.speed
         if keys[K_DOWN] and self.rect.y <550:  #vnyz2
             self.rect.y += self.speed
+            for w in walls:
+                if sprite.collide_rect(chuvak2,w):
+                    self.rect.y -= self.speed
 
     direction = 'right'
     def move2(self):
-        if self.rect.x > 500:
+        if self.rect.x > 390:
             self.direction = 'left'
-        if self.rect.x < 80:
+        if self.rect.x < 100:
             self.direction = 'right'
 
         if self.direction == 'right':
@@ -59,9 +71,9 @@ class Object(sprite.Sprite):
     
     direction2 = 'down'
     def move3(self):
-        if self.rect.y > 500:
+        if self.rect.y > 250:
             self.direction2 = 'up'
-        if self.rect.y < 80:
+        if self.rect.y < 10:
             self.direction2 = 'down'
 
         if self.direction2 == 'up':
@@ -72,19 +84,40 @@ class Object(sprite.Sprite):
 #створення вікна
 window = display.set_mode((800,600))
 display.set_caption('Лабіринт')
-picture = transform.scale(image.load("o.jpg"),(800,600))
+picture = transform.scale(image.load("bnacckck.png"),(800,600))
 
 chuvak1 = Object("chuvak1.png",90,200,60,50,4)
-chuvak2 = Object("chuvak2.jpg",30,100,60,50,15)
-chuvak3 = Object("b.png",180,210,60,50,4)
+chuvak2 = Object("chuvak2.jpg",30,100,60,50,8)
+chuvak3 = Object("b.png",500,100,60,50,4)
 clock  = time.Clock()
 
 #створення стін
-wall1 = Wall(0,0,0,300,100,200,10)
-wall2 = Wall(0,0,0,100,200,10,150)
-wall3 = Wall(0,0,0,250,200,10,150)
+wall1 = Wall(61,94,158,300,100,200,10)
+wall2 = Wall(61,94,158,100,200,10,150)
+wall3 = Wall(61,94,158,250,200,10,150)
+wall4 = Wall(61,94,158,100,100,200,10)
+wall5 = Wall(61,94,158,180,100,10,150)
+wall6 = Wall(61,94,158,250,190,200,10)
+wall7 = Wall(61,94,158,60,350,200,10)
+wall8 = Wall(61,94,158,400,100,220,10)
+wall9 = Wall(61,94,158,400,190,220,10)
+wall10 = Wall(61,94,158,500,100,250,10)
+wall11 = Wall(61,94,158,610,200,10,250)
+wall12 = Wall(61,94,158,740,110,10,340)
 
-
+walls = []
+walls.append(wall1)
+walls.append(wall2)
+walls.append(wall3)
+walls.append(wall4)
+walls.append(wall5)
+walls.append(wall6)
+walls.append(wall7)
+walls.append(wall8)
+walls.append(wall9)
+walls.append(wall10)
+walls.append(wall11)
+walls.append(wall12)
 #створення головного циклу
 game = True
 while game:
@@ -99,12 +132,23 @@ while game:
     chuvak2.move()
     chuvak1.move2()
     chuvak3.move3()
+
     wall1.draw_wall()
     wall2.draw_wall()
     wall3.draw_wall()
-    
-    if sprite.collide_rect(chuvak2,chuvak1) or sprite.collide_rect(chuvak2,chuvak3):
+    wall4.draw_wall()
+    wall5.draw_wall()
+    wall6.draw_wall()
+    wall7.draw_wall()
+    wall8.draw_wall()
+    wall9.draw_wall()
+    wall10.draw_wall()
+    wall11.draw_wall()
+    wall12.draw_wall()
+    if sprite.collide_rect(chuvak2,chuvak1) or sprite.collide_circle(chuvak2,chuvak3):
         game = False
+        
+    
   
 
     display.update()
