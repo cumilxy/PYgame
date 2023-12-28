@@ -1,5 +1,8 @@
 from pygame import *
-
+from time import sleep 
+mixer.init()
+s1 = mixer.Sound("sound1.mp3")
+s2 = mixer.Sound("shootingsound.mp3")
 class Wall(sprite.Sprite):
     def __init__(self, color_1, color_2, color_3, wall_x, wall_y, wall_width, wall_height):
         super().__init__()
@@ -84,6 +87,10 @@ class Object(sprite.Sprite):
     def fire(self):
         bullet = Bullet('bullet-removebg-preview.png',self.rect.centerx,self.rect.centery,15,15,10)
         bullets.add(bullet)
+    
+    def fire2(self):
+        bullet = Bullet2('bullet-removebg-preview.png',self.rect.centerx,self.rect.centery,15,15,10)
+        bullets2.add(bullet)
 
 class Bullet(Object):
     def update(self):
@@ -92,9 +99,17 @@ class Bullet(Object):
             self.kill()
 bullets = sprite.Group()
 
+class Bullet2(Object):
+    def update(self):
+        self.rect.y -= 10
+        if self.rect.y > 1000:
+            self.kill()
+bullets2 = sprite.Group()
+
 #створення вікна
 window = display.set_mode((800,600))
 display.set_caption('Лабіринт')
+finish = transform.scale(image.load('jumpscare.jpg'),(800,600))
 picture = transform.scale(image.load("bnacckck.png"),(800,600))
 
 chuvak1 = Object("chuvak1-removebg-preview.png",90,200,60,50,4)
@@ -102,7 +117,10 @@ chuvak2 = Object("chuvak2-removebg-preview.png",30,100,60,50,8)
 chuvak3 = Object("b-removebg-preview.png",500,100,60,50,4)
 coin = Object("coin-removebg-preview.png",650,400,60,50,4)
 chuvak4 = Object("epf-removebg-preview.png",650,350,60,50,4)
+keyforwall = Object("key-removebg-preview.png",400,100,60,50,4)
 clock  = time.Clock()
+
+
 
 #створення стін
 wall1 = Wall(61,94,158,300,100,200,10)
@@ -144,6 +162,7 @@ while game:
                 game = False
             elif e.type == KEYDOWN:
                 if e.key == K_e:
+                    s2.play()
                     chuvak2.fire()
         
         
@@ -187,8 +206,8 @@ while game:
             chuvak1 = Object("chuvak1.png",90,200,60,50,4)
             chuvak2 = Object("chuvak2.jpg",30,100,60,50,8)
             chuvak3 = Object("b.png",500,100,60,50,4)
-            coin = Object("b.png",500,400,60,50,4)
-            
+            coin = Object("coin-removebg-preview.png",650,400,60,50,4)
+            keyforwall = Object("key-removebg-preview.png",400,100,50,60,4)
             clock  = time.Clock()
 
 
@@ -199,25 +218,36 @@ while game:
             wall2 = Wall(61,94,158,300,450,200,50)
             wall3 = Wall(61,94,158,600,400,50,300)
             wall4 = Wall(61,94,158,330,0,70,450)
-            
+            wall5 = Wall(61,94,158,600,350,200,50)
 
             walls = []
             walls.append(wall1)
             walls.append(wall2)
             walls.append(wall3)
-            
+            walls.append(wall4)
+            walls.append(wall5)
             
     
     if level2:
         for e in event.get():
             if e.type == QUIT:
                 game = False
+            elif e.type == KEYDOWN:
+                if e.key == K_e:
+                    s2.play()
+                    chuvak2.fire2()
         
         window.blit(picture,(0,0))
+        
+        
+        
+        bullets2.update()
+        bullets2.draw(window)
         chuvak1.reset()
         chuvak3.reset()
         chuvak2.reset()
-        
+        coin.reset()
+        keyforwall.reset()
         chuvak2.move()
         chuvak1.move2()
         chuvak3.move3()
@@ -226,10 +256,24 @@ while game:
         wall2.draw_wall()
         wall3.draw_wall()
         wall4.draw_wall()
-        
+        wall5.draw_wall()
        
         if sprite.collide_rect(chuvak2,chuvak1) or sprite.collide_circle(chuvak2,chuvak3):
             game = False
+        
+        if sprite.collide_rect(chuvak2,keyforwall):
+            wall5.rect.x = 2500
+            keyforwall.rect.x = 2700
+        if sprite.collide_rect(chuvak2,coin):
+            window.blit(finish,(0,0))
+            s1.play()
+            
+            game = False
+        
+        if sprite.spritecollide(chuvak3,bullets2,True):
+            chuvak3.rect.x = 100000
+        
+        
 
         
 
