@@ -1,5 +1,5 @@
 from pygame import *
-from time import sleep 
+ 
 mixer.init()
 s1 = mixer.Sound("sound1.mp3")
 s2 = mixer.Sound("shootingsound.mp3")
@@ -106,6 +106,44 @@ class Bullet2(Object):
             self.kill()
 bullets2 = sprite.Group()
 
+menu = display.set_mode((400,400))
+display.set_caption("Лабіринт")
+
+#knopky
+start_btn = Rect(50,100,100,50)
+exit_btn = Rect(250,100,100,50)
+skin_btn = Rect(250,300,100,50)
+
+font.init()
+menu_font = font.Font(None, 20)
+
+menug = True
+
+while menug:
+    for e in event.get():
+        if e.type == QUIT:
+            menug = False
+        elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+            if exit_btn.collidepoint(mouse.get_pos()):
+                menug = False 
+                game = False
+           
+
+            elif start_btn.collidepoint(mouse.get_pos()):
+                menug = False
+                game = True
+    menu.fill((0,0,0))
+    draw.rect(menu,(103, 163, 109), start_btn)
+    draw.rect(menu,(255,0,0), exit_btn)
+
+    start_text = menu_font.render('Play Game', True, (0,0,0))
+    exit_text = menu_font.render('Exit Game', True, (0,0,0))
+    menu.blit(start_text,(start_btn.x+20, start_btn.y+20))
+    menu.blit(exit_text,(exit_btn.x+20, exit_btn.y+20))
+    display.update()
+
+display.quit()
+display.init()
 #створення вікна
 window = display.set_mode((800,600))
 display.set_caption('Лабіринт')
@@ -152,9 +190,10 @@ walls.append(wall10)
 walls.append(wall11)
 walls.append(wall12)
 #створення головного циклу
-game = True
+
 level1 = True
 level2 = False
+level3 = False
 while game:
     if level1:
         for e in event.get():
@@ -264,14 +303,35 @@ while game:
         if sprite.collide_rect(chuvak2,keyforwall):
             wall5.rect.x = 2500
             keyforwall.rect.x = 2700
-        if sprite.collide_rect(chuvak2,coin):
-            window.blit(finish,(0,0))
-            s1.play()
-            
-            game = False
         
         if sprite.spritecollide(chuvak3,bullets2,True):
             chuvak3.rect.x = 100000
+        
+       
+        if sprite.collide_rect(chuvak2,coin):
+            
+            level2 = False
+            level3 = True
+            chuvak1 = Object("chuvak1.png",90,200,60,50,4)
+            chuvak2 = Object("chuvak2.jpg",30,100,60,50,8)
+            
+    if level3:
+        for e in event.get():
+            if e.type == QUIT:
+                game = False
+            elif e.type == KEYDOWN:
+                if e.key == K_e:
+                    s2.play()
+                    chuvak2.fire2()
+        
+        window.blit(picture,(0,0))
+
+        bullets2.update()
+        bullets2.draw(window)
+        chuvak1.reset()
+        chuvak2.reset()
+        
+        
         
         
 
