@@ -1,12 +1,13 @@
 from pygame import *
 import pygame_menu
 from pygame_menu import *
+from ping_pong import *
 
 init()
 window = display.set_mode((500,400))
 menu = pygame_menu.Menu("main menu",500,400, theme=pygame_menu.themes.THEME_BLUE.copy())
 def start():
-    print('starting game...') 
+    starting() 
 def end():
     print('closing game...')
     exit()
